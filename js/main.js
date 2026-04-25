@@ -1,87 +1,174 @@
 const steps = [
   {
-    label: "reto mental",
-    icon: "🧠",
-    text: "¿Crees que puedo adivinar el número en el que estás pensando?",
-    sub: "No importa cuál elijas... siempre llegarás al mismo resultado.",
-    btn: "Acepto el reto"
+    label: "umbral",
+    symbol: "IV",
+    text: "Crees que puedo adivinar el numero que guardas en la mente",
+    sub: "No importa cual elijas. Si sigues el ritual, todos los caminos terminan igual.",
+    btn: "Entrar al enigma"
   },
   {
     label: "paso 1 de 5",
-    text: "Piensa en cualquier número",
-    sub: "Puede ser del 1 al 1000. Nadie más necesita saberlo.",
+    symbol: "I",
+    text: "Piensa en cualquier numero",
+    sub: "Puede ser pequeno o enorme. Solo asegurate de recordarlo.",
     btn: "Ya lo tengo"
   },
   {
     label: "paso 2 de 5",
-    text: "Multiplícalo por 2",
-    sub: "Tómate el tiempo que necesites.",
-    btn: "Listo"
+    symbol: "II",
+    text: "Multiplicalo por 2",
+    sub: "Hazlo con calma. Nadie ve tu resultado.",
+    btn: "Continuar"
   },
   {
     label: "paso 3 de 5",
-    text: "Súmale 8",
-    sub: "Recuerda el resultado.",
-    btn: "Hecho"
+    symbol: "III",
+    text: "Sumale 8",
+    sub: "No sueltes el numero. Todavia no termina.",
+    btn: "Seguir"
   },
   {
     label: "paso 4 de 5",
+    symbol: "IV",
     text: "Divide el resultado entre 2",
-    sub: "¿Ya tienes el nuevo número?",
-    btn: "Sí"
+    sub: "Estas muy cerca de la respuesta oculta.",
+    btn: "Listo"
   },
   {
     label: "paso 5 de 5",
-    text: "Réstale el número original",
-    sub: "El que pensaste al inicio.",
-    btn: "Tengo mi resultado"
+    symbol: "V",
+    text: "Restale el numero original",
+    sub: "Ese primer numero que elegiste en silencio.",
+    btn: "Revelar"
   },
   {
-    label: "revelación",
+    label: "revelacion",
     reveal: true,
     number: "4",
-    msg: "Sin importar el número que elegiste... el resultado siempre es 4.",
-    btn: "Intentar de nuevo"
+    msg: "Sin importar el numero que elegiste, el resultado final siempre es 4.",
+    btn: "Repetir el ritual"
   }
 ];
 
-let current = 0;
+const state = {
+  current: 0,
+  audioEnabled: false,
+  audioStarted: false
+};
 
-function render() {
-  const s = steps[current];
-  const pct = Math.round((current / (steps.length - 1)) * 100);
-  document.getElementById("progress").style.width = pct + "%";
+const progressEl = document.getElementById("progress");
+const screenEl = document.getElementById("screen");
+const audioEl = document.getElementById("mysteryAudio");
+const audioToggleEl = document.getElementById("audioToggle");
 
-  const screen = document.getElementById("screen");
-  screen.innerHTML = "";
-  screen.classList.remove("fade-in");
-  void screen.offsetWidth;
-  screen.classList.add("fade-in");
+audioEl.volume = 0.35;
 
-  if (s.reveal) {
-    screen.innerHTML = `
-      <div class="step-label">${s.label}</div>
-      <div class="big-number">${s.number}</div>
-      <div class="reveal-msg">${s.msg}</div>
-      <button class="btn-next" onclick="restart()">${s.btn}</button>
-    `;
-  } else {
-    screen.innerHTML = `
-      <div class="step-label">${s.label}</div>
-      ${s.icon ? `<div class="emoji-icon">${s.icon}</div>` : ""}
-      <div class="step-text">${s.text}</div>
-      <div class="step-sub">${s.sub}</div>
-      <button class="btn-next" onclick="next()">${s.btn}</button>
-    `;
+function updateAudioButton() {
+  audioToggleEl.textContent = state.audioEnabled ? "Silenciar audio" : "Activar audio";
+  audioToggleEl.setAttribute("aria-pressed", String(state.audioEnabled));
+}
+
+async function playAudio() {
+  try {
+    await audioEl.play();
+    state.audioEnabled = true;
+    state.audioStarted = true;
+  } catch (error) {
+    state.audioEnabled = false;
+  }
+
+  updateAudioButton();
+}
+
+function stopAudio() {
+  audioEl.pause();
+  state.audioEnabled = false;
+  updateAudioButton();
+}
+
+function ensureAudioFromInteraction() {
+  if (!state.audioStarted) {
+    playAudio();
   }
 }
 
+function render() {
+  const step = steps[state.current];
+  const pct = Math.round((state.current / (steps.length - 1)) * 100);
+
+  progressEl.style.width = `${pct}%`;
+  screenEl.classList.remove("fade-in");
+  void screenEl.offsetWidth;
+  screenEl.classList.add("fade-in");
+
+  if (step.reveal) {
+    screenEl.innerHTML = `
+      <div class="step-card">
+        <p class="step-label">${step.label}</p>
+        <p class="big-number">${step.number}</p>
+        <p class="reveal-msg">${step.msg}</p>
+        <button class="btn-next" type="button" data-action="restart">${step.btn}</button>
+      </div>
+    `;
+  } else {
+    screenEl.innerHTML = `
+      <div class="step-card">
+        <p class="step-label">${step.label}</p>
+        <div class="step-symbol" aria-hidden="true">${step.symbol}</div>
+        <h2 class="step-text">${step.text}</h2>
+        <p class="step-sub">${step.sub}</p>
+        <button class="btn-next" type="button" data-action="next">${step.btn}</button>
+      </div>
+    `;
+  }
+
+  const actionButton = screenEl.querySelector("[data-action]");
+
+  actionButton.addEventListener("click", () => {
+    ensureAudioFromInteraction();
+
+    if (actionButton.dataset.action === "restart") {
+      restart();
+      return;
+    }
+
+    next();
+  });
+}
+
 function next() {
-  if (current < steps.length - 1) { current++; render(); }
+  if (state.current < steps.length - 1) {
+    state.current += 1;
+    render();
+  }
 }
 
 function restart() {
-  current = 0; render();
+  state.current = 0;
+  render();
 }
 
+audioToggleEl.addEventListener("click", () => {
+  if (state.audioEnabled) {
+    stopAudio();
+    return;
+  }
+
+  playAudio();
+});
+
+document.addEventListener("visibilitychange", () => {
+  if (document.hidden && !audioEl.paused) {
+    audioEl.dataset.resumeOnFocus = "true";
+    audioEl.pause();
+    return;
+  }
+
+  if (!document.hidden && audioEl.dataset.resumeOnFocus === "true" && state.audioEnabled) {
+    audioEl.dataset.resumeOnFocus = "false";
+    playAudio();
+  }
+});
+
+updateAudioButton();
 render();

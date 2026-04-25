@@ -3,14 +3,55 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Reto Mental</title>
+  <meta
+    name="description"
+    content="Un reto matematico con una atmosfera misteriosa y audio ambiental."
+  />
+  <title>Reto Mental | Enigma del 4</title>
   <link rel="stylesheet" href="css/style.css" />
 </head>
 <body>
-  <div id="app">
-    <div class="progress-bar"><div class="progress-fill" id="progress"></div></div>
-    <div id="screen"></div>
-  </div>
+  <div class="scene-backdrop" aria-hidden="true"></div>
+  <div class="scene-noise" aria-hidden="true"></div>
+
+  <main id="app" class="app-shell">
+    <section class="mystery-panel" aria-label="Reto mental misterioso">
+      <header class="panel-header">
+        <div>
+          <p class="panel-kicker">Experimento 04</p>
+          <h1 class="panel-title">La camara del numero oculto</h1>
+        </div>
+
+        <button
+          id="audioToggle"
+          class="audio-toggle"
+          type="button"
+          aria-pressed="false"
+        >
+          Activar audio
+        </button>
+      </header>
+
+      <div class="progress-bar" aria-hidden="true">
+        <div class="progress-fill" id="progress"></div>
+      </div>
+
+      <section id="screen" class="screen" aria-live="polite"></section>
+
+      <p class="ambient-note">
+        El audio comienza cuando interactuas por primera vez. Si luego quieres,
+        puedo cambiar este fondo por una imagen real.
+      </p>
+    </section>
+  </main>
+
+  <audio
+    id="mysteryAudio"
+    loop
+    preload="auto"
+    src="static/audio/Suspense%20Thriller%20Music%20No%20Copyright%20-%20%5BDark%5D%20Mystery%20and%20Mysterious%20Investigation%20Background%20Music.mp3"
+  ></audio>
+
   <script src="js/main.js"></script>
 </body>
 </html>
