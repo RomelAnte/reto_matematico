@@ -1,0 +1,134 @@
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+body {
+  background: transparent;
+}
+#app {
+  font-family: var(--font-sans);
+  min-height: 520px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 2rem 1rem;
+  text-align: center;
+}
+#screen {
+  width: 100%;
+  max-width: 560px;
+  background: var(--color-background-primary);
+  border: 0.5px solid var(--color-border-tertiary);
+  border-radius: var(--border-radius-lg);
+  padding: 2.5rem 2rem;
+  min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1.2rem;
+}
+.step-label {
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+.step-text {
+  font-size: 26px;
+  font-weight: 500;
+  color: var(--color-text-primary);
+  line-height: 1.3;
+}
+.step-sub {
+  font-size: 15px;
+  color: var(--color-text-secondary);
+  max-width: 380px;
+  line-height: 1.6;
+}
+.big-number {
+  font-size: 96px;
+  font-weight: 500;
+  color: #534ab7;
+  line-height: 1;
+  animation: popIn 0.5s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+}
+@keyframes popIn {
+  0% {
+    transform: scale(0.3);
+    opacity: 0;
+  }
+  100% {
+    transform: scale(1);
+    opacity: 1;
+  }
+}
+.progress-bar {
+  width: 100%;
+  max-width: 560px;
+  height: 4px;
+  background: var(--color-background-secondary);
+  border-radius: 2px;
+  margin-bottom: 1rem;
+  overflow: hidden;
+}
+.progress-fill {
+  height: 100%;
+  background: #534ab7;
+  border-radius: 2px;
+  transition: width 0.6s ease;
+}
+.btn-next {
+  margin-top: 1rem;
+  padding: 10px 32px;
+  font-size: 15px;
+  font-weight: 500;
+  border: 0.5px solid var(--color-border-secondary);
+  border-radius: var(--border-radius-md);
+  background: transparent;
+  color: var(--color-text-primary);
+  cursor: pointer;
+  transition:
+    background 0.15s,
+    transform 0.1s;
+}
+.btn-next:hover {
+  background: var(--color-background-secondary);
+}
+.btn-next:active {
+  transform: scale(0.98);
+}
+.btn-restart {
+  margin-top: 0.5rem;
+  font-size: 13px;
+  color: var(--color-text-secondary);
+  background: none;
+  border: none;
+  cursor: pointer;
+  text-decoration: underline;
+}
+.emoji-icon {
+  font-size: 40px;
+  line-height: 1;
+}
+.reveal-msg {
+  font-size: 16px;
+  color: var(--color-text-secondary);
+  max-width: 360px;
+  line-height: 1.6;
+}
+.fade-in {
+  animation: fadeIn 0.4s ease;
+}
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(8px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
